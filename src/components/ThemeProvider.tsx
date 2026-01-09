@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ThemeContext, Theme, themes } from '@/lib/themes';
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [theme, setTheme] = useState<Theme>('dark');
+  const [theme, setTheme] = useState<Theme>('light');
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
@@ -12,9 +12,9 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
       setTheme(savedTheme);
       console.log('Theme initialized from localStorage:', savedTheme);
     } else {
-      // If no saved theme, default to dark
-      localStorage.setItem('theme', 'dark');
-      console.log('No saved theme found, defaulting to dark');
+      // If no saved theme, default to light
+      localStorage.setItem('theme', 'light');
+      console.log('No saved theme found, defaulting to light');
     }
     setIsInitialized(true);
   }, []);

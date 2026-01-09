@@ -31,7 +31,7 @@ export const ThemeContext = createContext<{
   theme: Theme;
   setTheme: (theme: Theme) => void;
 }>({
-  theme: 'dark',
+  theme: 'light',
   setTheme: () => null,
 });
 
