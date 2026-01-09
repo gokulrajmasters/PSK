@@ -83,21 +83,47 @@ export default defineConfig(({ mode }) => ({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: (id) => {
-          // Vendor chunks
-          if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom')) {
-              return 'vendor-react';
-            }
-            if (id.includes('@radix-ui')) {
-              return 'vendor-ui';
-            }
-            if (id.includes('framer-motion')) {
-              return 'vendor-animation';
-            }
-            return 'vendor'; // other dependencies
-          }
-          return null;
+        // Simplified chunking - keep React ecosystem together to avoid initialization order bugs
+        manualChunks: {
+          // Core React + all UI libs that call createContext at init time - MUST stay together
+          'vendor': [
+            'react',
+            'react-dom',
+            'react-router-dom',
+            '@tanstack/react-query',
+            'sonner',
+            '@radix-ui/react-toast',
+            '@radix-ui/react-tooltip',
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-navigation-menu',
+            '@radix-ui/react-popover',
+            '@radix-ui/react-select',
+            '@radix-ui/react-tabs',
+            '@radix-ui/react-accordion',
+            '@radix-ui/react-checkbox',
+            '@radix-ui/react-label',
+            '@radix-ui/react-slot',
+            '@radix-ui/react-separator',
+            '@radix-ui/react-scroll-area',
+            '@radix-ui/react-switch',
+            '@radix-ui/react-toggle',
+            '@radix-ui/react-toggle-group',
+            '@radix-ui/react-radio-group',
+            '@radix-ui/react-slider',
+            '@radix-ui/react-progress',
+            '@radix-ui/react-avatar',
+            '@radix-ui/react-collapsible',
+            '@radix-ui/react-context-menu',
+            '@radix-ui/react-hover-card',
+            '@radix-ui/react-menubar',
+            '@radix-ui/react-alert-dialog',
+            '@radix-ui/react-aspect-ratio',
+          ],
+          // Animation - can load separately, doesn't create contexts at init
+          'vendor-animation': ['framer-motion'],
+          // Utilities - truly independent
+          'vendor-utils': ['clsx', 'tailwind-merge', 'class-variance-authority', 'zod', 'date-fns'],
         },
         // Ensure a maximum chunk size to avoid large files
         chunkFileNames: 'assets/js/[name]-[hash].js',
